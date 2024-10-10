@@ -80,15 +80,15 @@ ref_spec = shaasp.cola_stft(ref_sig, nfft, hop, wind, single_sided);
 cpsd_aa = shaasp.spec_to_crossspec(tgt_spec);  % [f,t,a,a]
 cpsd_ba = shaasp.spec_to_crossspec(ref_spec, tgt_spec);  % [f,t,b,a]
 
-% Time averaging to get covariance.
-cov_aa = mean(cpsd_aa, 2); % shaasp.spec_time_averaging(cpsd_aa, [], "all");
-cov_ba = mean(cpsd_ba, 2); % shaasp.spec_time_averaging(cpsd_ba, [], "all");
+% Time averaging to get spatial correlation matrix.
+corr_aa = mean(cpsd_aa, 2); % shaasp.spec_time_averaging(cpsd_aa, [], "all");
+corr_ba = mean(cpsd_ba, 2); % shaasp.spec_time_averaging(cpsd_ba, [], "all");
 
-% Estimate inverse of cov_ba. 
-cov_ba_inv = lastpagepinv(cov_ba);  % [f,1,a,b]
+% Estimate inverse of corr_ba. 
+corr_ba_inv = lastpagepinv(corr_ba);  % [f,1,a,b]
 
-% Estimate ReTM = cov_aa * (cov_ba)^-1
-retm = lastpagemtimes(cov_aa, cov_ba_inv);  % [f,1,a,b]
+% Estimate ReTM = corr_aa * (corr_ba)^-1
+retm = lastpagemtimes(corr_aa, corr_ba_inv);  % [f,1,a,b]
 reim = ifft(retm, nfft, 1, 'symmetric');  % [sample,1,a,b]
 
 end

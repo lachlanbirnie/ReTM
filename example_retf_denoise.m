@@ -71,29 +71,29 @@ ref_spec = shaasp.cola_stft(ref_sig, nfft, hop, wind);  % [f,t,1]
 psd_tgt_ref = shaasp.spec_to_crossspec(tgt_spec, ref_spec);  % [f,t,1,1]
 psd_ref_ref = shaasp.spec_to_crossspec(ref_spec);  % auto-correlation.
 
-% Step 4) Covariance (time averaged PSDs).
-covariance_method = 'all';
-% % covariance_method = 'shorttime';
+% Step 4) Spatial correlation (time averaged PSDs).
+averaging_method = 'all';
+% % averaging_method = 'shorttime';
 
-switch covariance_method
+switch averaging_method
     case 'all'
         % Average over all time frames for time-invariant ReTF [f,1,1].
-        covar_tgt_ref = shaasp.spec_time_averaging(psd_tgt_ref, [], "all");
-        covar_ref_ref = shaasp.spec_time_averaging(psd_ref_ref, [], "all");
+        corr_tgt_ref = shaasp.spec_time_averaging(psd_tgt_ref, [], "all");
+        corr_ref_ref = shaasp.spec_time_averaging(psd_ref_ref, [], "all");
     
     case 'shorttime'
         % Average over time window for shorttime ReTF [f,t,1]. 
         ave_time_seconds = 5;
         ave_time_nframes = floor(ave_time_seconds * fs / hop);
-        covar_tgt_ref = shaasp.spec_time_averaging(psd_tgt_ref, ave_time_nframes, "closest");
-        covar_ref_ref = shaasp.spec_time_averaging(psd_ref_ref, ave_time_nframes, "closest");
+        corr_tgt_ref = shaasp.spec_time_averaging(psd_tgt_ref, ave_time_nframes, "closest");
+        corr_ref_ref = shaasp.spec_time_averaging(psd_ref_ref, ave_time_nframes, "closest");
 
     otherwise
         error('Typo somewhere :)');
 end
 
 % Step 5) Relative Transfer Function (ReTF)
-retf = covar_tgt_ref ./ covar_ref_ref;
+retf = corr_tgt_ref ./ corr_ref_ref;
 
 % Step 6) Estimate noise component spectrum from the reference.
 est_spec = retf .* ref_spec;

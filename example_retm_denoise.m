@@ -76,7 +76,7 @@ wind = shaasp.cola_window(wlen, hop, ola_method);  % COLA hann window.
 single_sided = true;  % Single side to reduce computation.
 
 % ReTM settings.
-covariance_time_sec = 20;  % Seconds to average covariance over.
+correlation_time_sec = 20;  % Seconds to average correlation over.
 retm_smooth_time_sec = 20;  % Seconds to smooth ReTM over.
 
 %% Pre-process signals.
@@ -108,26 +108,26 @@ ref_training_spec = shaasp.cola_stft(ref_training_sig, nfft, hop, wind, single_s
 cpsd_aa = shaasp.spec_to_crossspec(tgt_training_spec);  % auto-correlation. [f,t,a,a]
 cpsd_ba = shaasp.spec_to_crossspec(ref_training_spec, tgt_training_spec);  % [f,t,b,a]
 
-% Covariance (time averaged CPSDs).
+% Spatial correlation (time averaged CPSDs).
 switch retm_method
     
     case 'embedded'
         % Estimate ReTM from averaging the mixture recording.
-        ave_time_nframes = floor(covariance_time_sec * fs / hop);
-        cov_aa = shaasp.spec_time_averaging(cpsd_aa, ave_time_nframes, "closest");
-        cov_ba = shaasp.spec_time_averaging(cpsd_ba, ave_time_nframes, "closest");
+        ave_time_nframes = floor(correlation_time_sec * fs / hop);
+        corr_aa = shaasp.spec_time_averaging(cpsd_aa, ave_time_nframes, "closest");
+        corr_ba = shaasp.spec_time_averaging(cpsd_ba, ave_time_nframes, "closest");
 
     otherwise
         % Esimate ReTM as mean of all training CPSD frames.
-        cov_aa = shaasp.spec_time_averaging(cpsd_aa, [], "all");
-        cov_ba = shaasp.spec_time_averaging(cpsd_ba, [], "all");
+        corr_aa = shaasp.spec_time_averaging(cpsd_aa, [], "all");
+        corr_ba = shaasp.spec_time_averaging(cpsd_ba, [], "all");
 end
 
-% Estimate inverse of cov_ba. 
-cov_ba_inv = lastpagepinv(cov_ba);  % [f,t,a,b]
+% Estimate inverse of corr_ba. 
+corr_ba_inv = lastpagepinv(corr_ba);  % [f,t,a,b]
 
-% Estimate ReTM by ReTM = cov_aa * (cov_ba)^-1
-retm_ab = lastpagemtimes(cov_aa, cov_ba_inv);  % [f,t,a,b]
+% Estimate ReTM by ReTM = corr_aa * (corr_ba)^-1
+retm_ab = lastpagemtimes(corr_aa, corr_ba_inv);  % [f,t,a,b]
 
 %% Need to smooth the ReTM after matrix devision (not sure why).
 switch retm_method
@@ -144,7 +144,7 @@ end
 % Get stft spectrum of reference.
 ref_spec = shaasp.cola_stft(ref_sig, nfft, hop, wind, single_sided);
 
-% If ReTM is estimated as a shot-time covariance but is different size as
+% If ReTM is estimated as a shot-time correlation but is different size as
 % the target recording, just revert back to an average time-invariant ReTM.
 if size(retm_ab, 2) ~= size(ref_spec, 2)
     retm_ab = shaasp.spec_time_averaging(retm_ab, [], "all");

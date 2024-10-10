@@ -86,8 +86,8 @@ $$
 C_{2,2}(\tau,f) = P_{2}(\tau,f) \times P^{ * } _{2}(\tau,f)
 $$
 
-#### Spectral Covariance
-Time averaging of the CPSDs to get the spectral covariance
+#### Spatial Correlation
+Time averaging of the CPSDs to get the spatial correlation
 
 $$
 E_{1,2}(f) = \frac{1}{T} \sum_{t=1}^{T} C_{1,2}(\tau-t,f), 
@@ -96,7 +96,7 @@ E_{2,2}(f) = \frac{1}{T} \sum_{t=1}^{T} C_{2,2}(\tau-t,f).
 $$
 
 #### Estimated Relative Transfer Function
-The ReTF is estimated by the ratio of spectral covariances
+The ReTF is estimated by the ratio of spatial correlations
 
 $$
 R_{12}^{(s)}(f) \approx \frac{E_{1,2}(f)}{E_{2,2}(f)}
@@ -189,8 +189,8 @@ $$
 C_{A,A}(\tau,f) = \textbf{A}(\tau,f) \textbf{A}^{ * }(\tau,f)
 $$
 
-#### Spatial Covariance
-Time average CPSDs to get spatial coveraiances
+#### Spatial Correlation
+Time average CPSDs to get spatial correlation matrix
 
 $$
 E_{B,A}(f) = \frac{1}{T} \sum_{t=1}^{T} C_{B,A}(\tau-t,f)
@@ -295,7 +295,7 @@ $$
 where $\hat{S}(\tau,f)$ can be considered an ehancement (with slight distortion) of whatever signal other than the noise is present in the target microphone, in this case the speech signal.
 
 ### Estimating the ReTF for Denoising
-The signal denoising of (3) requires the ReTF of the noise source ($n$) to be known. In practice, we can estimate the noise's ReTF by the assumption that on average over time the recording contains mostly active noise and inactive speech. Therefore, the spectral covariance approach in [Obtaining ReTF in Practice](#obtaining-retf-in-practice) can be used such that 
+The signal denoising of (3) requires the ReTF of the noise source ($n$) to be known. In practice, we can estimate the noise's ReTF by the assumption that on average over time the recording contains mostly active noise and inactive speech. Therefore, the spatial correlation approach in [Obtaining ReTF in Practice](#obtaining-retf-in-practice) can be used such that 
 
 $$
 R_{1,2}^{(n)}(f) 

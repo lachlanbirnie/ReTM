@@ -79,12 +79,12 @@ ref_spec = shaasp.cola_stft(ref_sig, nfft, hop, wind);
 cpsd_12 = shaasp.spec_to_crossspec(tgt_spec, ref_spec);
 cpsd_22 = shaasp.spec_to_crossspec(ref_spec);
 
-% Time averaging to get covariance.
-cov_12 = mean(cpsd_12, 2); % shaasp.spec_time_averaging(cpsd_12, [], "all");
-cov_22 = mean(cpsd_22, 2); % shaasp.spec_time_averaging(cpsd_22, [], "all");
+% Time averaging to get spatial correlation.
+corr_12 = mean(cpsd_12, 2); % shaasp.spec_time_averaging(cpsd_12, [], "all");
+corr_22 = mean(cpsd_22, 2); % shaasp.spec_time_averaging(cpsd_22, [], "all");
 
 % Estimate ReTF.
-retf = cov_12 ./ cov_22;
+retf = corr_12 ./ corr_22;
 reir = real(ifft(retf, nfft, 1, "symmetric"));
 
 end
