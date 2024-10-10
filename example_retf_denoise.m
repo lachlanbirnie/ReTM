@@ -39,7 +39,7 @@ fs = 48000;
 
 % STFT settings.
 wlen = fs / 1;  % Window length should be longer than RT60.
-nfft = 4 * wlen;  % NFFT size should be greater than 2 * wlen.
+nfft = 2^nextpow2(2 * wlen);  % NFFT size should be greater than 2 * wlen.
 hop = wlen / 4;  % Step / hop size should be <= wlen.
 ola_method = 'ola';  % ReTF is filtering so need STFT OLA processing.
 wind = shaasp.cola_window(wlen, hop, ola_method);  % COLA hann window.
