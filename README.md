@@ -211,7 +211,7 @@ $$
 The ReTM can then be estimated by
 
 $$
-\textbf{R} _{AB}(\tau,f) \approx E_{A,A}(f) \times E_{B,A}^{\dagger}(f)
+\textbf{R} _ {AB}(\tau,f) \approx E_{A,A}(f) \times E_{B,A}^{\dagger}(f)
 $$
 
 And can be used for 
